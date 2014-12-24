@@ -1,4 +1,4 @@
-(defproject channel2 "1.0.0"
+(defproject channel2 "1.0.1"
   :description "A Clojure library designed to scraping Japanese bulletin board \"2ch\"."
   :url "http://delihiros.github.io"
   :license {:name "Eclipse Public License"

@@ -8,6 +8,17 @@
 (defrecord Response
   [response-number id date handle-name mail-address content response-anchor])
 
+(defn br-tag->newline
+  [content]
+  (->> content
+       (map (fn [c] (if (= :br (:tag c)) "\n" c)))
+       (partition-by type)
+       (map (fn [part]
+              (if (string? (first part))
+                (clojure.string/join part)
+                part)))
+       flatten))
+
 (defn parse-response
   [[dt dd]]
   (let [dt-content      (:content dt)
@@ -19,7 +30,7 @@
                              clojure.string/join)
         handle-name     (-> dt-content second :content first :content first)
         mail-address    (-> dt-content second :attrs :href)
-        content         (text dd)
+        content         (text {:tag :dd :content (-> (:content dd) br-tag->newline)})
         response-anchor (or (re-seq #">>[0-9]+" content) [])]
     (Response. response-number id date handle-name mail-address content response-anchor)))
 
